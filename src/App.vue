@@ -32,6 +32,7 @@
               class="controls__orders-min-input input_number"
               v-model="minConfirmedOrders"
               type="number"
+              min="0"
               placeholder="От"
             />
             <MyInput
@@ -42,6 +43,7 @@
             />
           </div>
         </div>
+        <MyButton @click="resetTable">Сбросить фильтры</MyButton>
       </div>
       <UserTable :users="preparedUsers" :columns="columns" />
     </section>
@@ -72,6 +74,17 @@ export default {
       minConfirmedOrders: null,
       maxConfirmedOrders: null,
     };
+  },
+  methods: {
+    resetTable() {
+      console.log('sdsa');
+      this.selectedSortDirection = 'asc';
+      this.selectedSort = '';
+      this.searchQuery = '';
+      this.selectedStatus = '';
+      this.minConfirmedOrders = null;
+      this.maxConfirmedOrders = null;
+    },
   },
   computed: {
     sortedUsers() {
