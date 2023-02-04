@@ -117,8 +117,7 @@ export default {
   color: #2c3e50;
   margin: 0;
   padding: 0;
-  min-width: 100vw;
-  min-height: 100vh;
+  background-color: rgb(237, 240, 243);
 }
 
 body {
@@ -137,17 +136,17 @@ body {
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr;
   padding: 10px;
   border: 1px solid green;
   border-radius: 20px;
-  gap: 20px;
+  gap: 20px 0;
 }
 
 .controls__block-title {
   grid-area: title;
   color: green;
   font-weight: 400;
+  font-size: 21px;
   line-height: 1;
   margin: 0;
 }
@@ -173,6 +172,7 @@ body {
 
 .controls__filters {
   display: grid;
+  width: 100%;
   align-items: center;
   grid-template-areas:
     'title search'
@@ -192,6 +192,7 @@ body {
   grid-area: orders;
   width: 100%;
   display: grid;
+  align-items: center;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     'title min'
@@ -204,6 +205,10 @@ body {
 
 .controls__orders-filter-title {
   grid-area: title;
+  margin: 0;
+  color: green;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .controls__orders-max-input {
@@ -217,5 +222,38 @@ body {
 .input_number::-webkit-outer-spin-button,
 .input_number::-webkit-inner-spin-button {
   display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .users-statistics {
+    display: grid;
+    gap: 10px 0;
+    padding: 10px;
+  }
+
+  .controls__sorting {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'title'
+      'sortby'
+      'sortdir';
+  }
+
+  .controls__filters {
+    grid-template-areas:
+      'title '
+      'search'
+      'status'
+      'orders';
+    grid-template-columns: 1fr;
+  }
+
+  .controls__block-title {
+    font-size: 16px;
+  }
+
+  .controls__orders-filter-title {
+    font-size: 16px;
+  }
 }
 </style>

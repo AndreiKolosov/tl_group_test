@@ -1,8 +1,9 @@
 <template>
+  <h2 class="title">Таблица пользователей</h2>
   <table class="users-table">
     <thead class="user-table__head">
       <td class="user-table__head-cell" v-for="columnItem in columns" :key="columnItem.value">
-        <span>{{ columnItem.name }}</span>
+        <p class="user-table__cell-text">{{ columnItem.name }}</p>
       </td>
     </thead>
     <tbody>
@@ -36,6 +37,12 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  margin: 0;
+  color: green;
+  font-size: 21px;
+  line-height: 1;
+}
 .users-table {
   list-style: none;
   margin: 0;
@@ -57,11 +64,20 @@ export default {
 }
 .user-table__head-cell {
   height: 100%;
-  min-width: 150px;
+  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-right: 2px solid green;
+}
+
+.user-table__cell-text {
+  margin: 0;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  color: black;
+  word-break: break-all;
 }
 
 .user-table__head-cell:last-of-type {
@@ -71,5 +87,21 @@ export default {
 /* animation */
 .users-move {
   transition: transform 0.8s ease;
+}
+
+@media screen and (max-width: 768px) {
+  .user-table__cell-text {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .user-table__cell-text {
+    font-size: 12px;
+  }
+
+  .user-table__head-cell {
+    min-width: 70px;
+  }
 }
 </style>
