@@ -118,6 +118,7 @@ export default {
   margin: 0;
   padding: 0;
   background-color: rgb(237, 240, 243);
+  min-height: 100vh;
 }
 
 body {
