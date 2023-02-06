@@ -8,7 +8,7 @@
     </thead>
     <tbody>
       <TransitionGroup name="users">
-        <UserTableRow v-for="user in users" :key="user.id" :user="user" />
+        <UserTableRow class="user-table__row" v-for="user in users" :key="user.id" :user="user" />
       </TransitionGroup>
     </tbody>
   </table>
@@ -86,6 +86,10 @@ export default {
 /* animation */
 .users-move {
   transition: transform 0.8s ease;
+}
+
+.user-table__row:first-of-type {
+  border-top: 2px solid green;
 }
 
 @media screen and (max-width: 768px) {

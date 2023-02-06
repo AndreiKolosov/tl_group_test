@@ -37,9 +37,6 @@ export default {
   width: 100%;
 }
 
-.row:first-of-type {
-  border-top: 2px solid green;
-}
 .row:last-of-type {
   border: none;
 }
