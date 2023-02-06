@@ -1,6 +1,6 @@
 <template>
-  <select :value="modelValue" @change="changeOption" :placeholder="placeholderValue">
-    <option disabled value="">{{ placeholderValue }}</option>
+  <select :value="modelValue" @change="changeOption">
+    <option value="" class="placeholder">{{ placeholderValue }}</option>
     <option v-for="option in options" :key="option.value" :value="option.value">{{ option.name }}</option>
   </select>
 </template>
@@ -24,4 +24,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.placeholder {
+  color: lightgray;
+}
+</style>

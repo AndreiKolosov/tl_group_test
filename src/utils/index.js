@@ -38,3 +38,13 @@ export const statusFilterOptions = [
   { value: 'рыбак', name: 'рыбак' },
   { value: 'охотник', name: 'охотник' },
 ];
+
+export const getMaxConfirmedOrders = (usersArr) => {
+  const orders = usersArr.map((user) => user.confirmedOrders);
+
+  return Math.max(...orders);
+};
+
+export const updateQueryParams = (href) => {
+  window.history.pushState(null, null, href);
+};

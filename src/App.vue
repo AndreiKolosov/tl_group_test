@@ -8,13 +8,13 @@
             class="controls__sorting-by"
             v-model="selectedSort"
             :options="columns"
-            :placeholderValue="'Сортировать по'"
+            :placeholderValue="'Выберити способ сортировки...'"
           />
           <MySelect
             class="controls__sorting-dir"
             v-model="selectedSortDirection"
             :options="sortingDirections"
-            :placeholderValue="'Направление сортировки'"
+            :placeholderValue="'Выберити направление сортировки...'"
           />
         </div>
         <div class="controls__filters">
@@ -24,7 +24,7 @@
             class="controls__filter-by-status"
             v-model="selectedStatus"
             :options="statusOptions"
-            :placeholderValue="'Фильтрация по статусу'"
+            :placeholderValue="'Выберите статус...'"
           />
           <div class="controls__orders-filter">
             <p class="controls__orders-filter-title">Подтвержденные заказы</p>
@@ -43,7 +43,7 @@
             />
           </div>
         </div>
-        <MyButton @click="resetTable">Сбросить фильтры</MyButton>
+        <MyButton @click="resetTable" class="controls__reset-btn">Сбросить фильтры</MyButton>
       </div>
       <UserTable :users="preparedUsers" :columns="columns" />
     </section>
@@ -54,7 +54,14 @@
 import MySelect from '@/components/UI/MySelect.vue';
 import UserTable from '@/components/UserTable.vue';
 import { mockUsers, mockColumns } from '@/mockData';
-import { ascNumberSort, descNumberSort, sortingDirectionsOptions, statusFilterOptions } from '@/utils';
+import {
+  ascNumberSort,
+  descNumberSort,
+  sortingDirectionsOptions,
+  statusFilterOptions,
+  getMaxConfirmedOrders,
+  updateQueryParams,
+} from '@/utils';
 
 export default {
   components: {
@@ -73,17 +80,29 @@ export default {
       selectedStatus: '',
       minConfirmedOrders: null,
       maxConfirmedOrders: null,
+      newURl: new URL(window.location.href),
     };
   },
   methods: {
     resetTable() {
-      console.log('sdsa');
       this.selectedSortDirection = 'asc';
       this.selectedSort = '';
       this.searchQuery = '';
       this.selectedStatus = '';
-      this.minConfirmedOrders = null;
-      this.maxConfirmedOrders = null;
+      this.minConfirmedOrders = 0;
+      this.maxConfirmedOrders = getMaxConfirmedOrders(this.users);
+      this.newURl.search = '';
+      updateQueryParams(this.newURl.href);
+    },
+    setInitialFilters() {
+      const params = this.newURl.searchParams;
+
+      this.selectedSortDirection = params.get('direction') || 'asc';
+      this.selectedSort = params.get('selected-sort') || '';
+      this.searchQuery = params.get('search-string') || '';
+      this.selectedStatus = params.get('selected-status') || '';
+      this.minConfirmedOrders = params.get('min-orders') || 0;
+      this.maxConfirmedOrders = params.get('max-orders') || getMaxConfirmedOrders(this.users);
     },
   },
   computed: {
@@ -111,12 +130,41 @@ export default {
     },
     preparedUsers() {
       return this.filteredByStatusUsers.filter((user) => {
-        if (this.maxConfirmedOrders && this.minConfirmedOrders) {
-          return user.confirmedOrders > this.minConfirmedOrders && user.confirmedOrders < this.maxConfirmedOrders;
+        if (this.maxConfirmedOrders || this.minConfirmedOrders) {
+          return user.confirmedOrders >= this.minConfirmedOrders && user.confirmedOrders <= this.maxConfirmedOrders;
         }
         return user;
       });
     },
+  },
+  watch: {
+    minConfirmedOrders(newValue) {
+      this.newURl.searchParams.set('min-orders', newValue);
+      updateQueryParams(this.newURl.href);
+    },
+    maxConfirmedOrders(newValue) {
+      this.newURl.searchParams.set('max-orders', newValue);
+      updateQueryParams(this.newURl.href);
+    },
+    selectedSortDirection(newValue) {
+      this.newURl.searchParams.set('direction', newValue);
+      updateQueryParams(this.newURl.href);
+    },
+    selectedSort(newValue) {
+      this.newURl.searchParams.set('selected-sort', newValue);
+      updateQueryParams(this.newURl.href);
+    },
+    searchQuery(newValue) {
+      this.newURl.searchParams.set('search-string', newValue);
+      updateQueryParams(this.newURl.href);
+    },
+    selectedStatus(newValue) {
+      this.newURl.searchParams.set('selected-status', newValue);
+      updateQueryParams(this.newURl.href);
+    },
+  },
+  mounted() {
+    this.setInitialFilters();
   },
 };
 </script>
@@ -236,6 +284,12 @@ body {
 .input_number::-webkit-outer-spin-button,
 .input_number::-webkit-inner-spin-button {
   display: none;
+}
+
+.controls__reset-btn {
+  font-size: 16px;
+  max-width: 300px;
+  justify-self: right;
 }
 
 @media screen and (max-width: 768px) {

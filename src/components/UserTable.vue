@@ -60,7 +60,6 @@ export default {
   height: 1px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-bottom: 2px solid green;
 }
 .user-table__head-cell {
   height: 100%;
