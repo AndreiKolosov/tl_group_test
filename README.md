@@ -56,7 +56,7 @@ SCSS;
 
 ## <a id="author" />Авторы
 
-Андрей Колосов 2022г
+Андрей Колосов 2023г
 
 - [Telegram ](https://t.me/RustyVoid)
 - [Instagram](https://www.instagram.com/akolosof/)
