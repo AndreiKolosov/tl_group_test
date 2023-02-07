@@ -59,7 +59,6 @@ import {
   descNumberSort,
   sortingDirectionsOptions,
   statusFilterOptions,
-  getMaxConfirmedOrders,
   updateQueryParams,
 } from '@/utils';
 
@@ -74,7 +73,7 @@ export default {
       columns: mockColumns,
       sortingDirections: sortingDirectionsOptions,
       statusOptions: statusFilterOptions,
-      selectedSortDirection: 'asc',
+      selectedSortDirection: '',
       selectedSort: '',
       searchQuery: '',
       selectedStatus: '',
@@ -85,24 +84,24 @@ export default {
   },
   methods: {
     resetTable() {
-      this.selectedSortDirection = 'asc';
+      this.selectedSortDirection = '';
       this.selectedSort = '';
       this.searchQuery = '';
       this.selectedStatus = '';
-      this.minConfirmedOrders = 0;
-      this.maxConfirmedOrders = getMaxConfirmedOrders(this.users);
+      this.minConfirmedOrders = null;
+      this.maxConfirmedOrders = null;
       this.newURl.search = '';
       updateQueryParams(this.newURl.href);
     },
     setInitialFilters() {
       const params = this.newURl.searchParams;
 
-      this.selectedSortDirection = params.get('direction') || 'asc';
+      this.selectedSortDirection = params.get('direction') || '';
       this.selectedSort = params.get('selected-sort') || '';
       this.searchQuery = params.get('search-string') || '';
       this.selectedStatus = params.get('selected-status') || '';
-      this.minConfirmedOrders = params.get('min-orders') || 0;
-      this.maxConfirmedOrders = params.get('max-orders') || getMaxConfirmedOrders(this.users);
+      this.minConfirmedOrders = params.get('min-orders') || null;
+      this.maxConfirmedOrders = params.get('max-orders') || null;
     },
   },
   computed: {
@@ -130,37 +129,52 @@ export default {
     },
     preparedUsers() {
       return this.filteredByStatusUsers.filter((user) => {
-        if (this.maxConfirmedOrders || this.minConfirmedOrders) {
-          return user.confirmedOrders >= this.minConfirmedOrders && user.confirmedOrders <= this.maxConfirmedOrders;
+        if (this.maxConfirmedOrders) {
+          return user.confirmedOrders <= this.maxConfirmedOrders;
+        } else if (this.minConfirmedOrders) {
+          return user.confirmedOrders >= this.minConfirmedOrders;
+        } else {
+          return user;
         }
-        return user;
       });
     },
   },
   watch: {
     minConfirmedOrders(newValue) {
-      this.newURl.searchParams.set('min-orders', newValue);
-      updateQueryParams(this.newURl.href);
+      if (newValue) {
+        this.newURl.searchParams.set('min-orders', newValue);
+        updateQueryParams(this.newURl.href);
+      }
     },
     maxConfirmedOrders(newValue) {
-      this.newURl.searchParams.set('max-orders', newValue);
-      updateQueryParams(this.newURl.href);
+      if (newValue) {
+        this.newURl.searchParams.set('max-orders', newValue);
+        updateQueryParams(this.newURl.href);
+      }
     },
     selectedSortDirection(newValue) {
-      this.newURl.searchParams.set('direction', newValue);
-      updateQueryParams(this.newURl.href);
+      if (newValue !== '') {
+        this.newURl.searchParams.set('direction', newValue);
+        updateQueryParams(this.newURl.href);
+      }
     },
     selectedSort(newValue) {
-      this.newURl.searchParams.set('selected-sort', newValue);
-      updateQueryParams(this.newURl.href);
+      if (newValue !== '') {
+        this.newURl.searchParams.set('selected-sort', newValue);
+        updateQueryParams(this.newURl.href);
+      }
     },
     searchQuery(newValue) {
-      this.newURl.searchParams.set('search-string', newValue);
-      updateQueryParams(this.newURl.href);
+      if (newValue !== '') {
+        this.newURl.searchParams.set('search-string', newValue);
+        updateQueryParams(this.newURl.href);
+      }
     },
     selectedStatus(newValue) {
-      this.newURl.searchParams.set('selected-status', newValue);
-      updateQueryParams(this.newURl.href);
+      if (newValue !== '') {
+        this.newURl.searchParams.set('selected-status', newValue);
+        updateQueryParams(this.newURl.href);
+      }
     },
   },
   mounted() {
